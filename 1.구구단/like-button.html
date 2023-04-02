@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web Game</title>                    
+    </head>
+    <body>
+        <div id="root"></div>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script>
+            'use strict';
+
+            class LikeButton extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = { liked: false };
+                }
+
+                render() {
+                    if (this.state.liked) {
+                        return 'You liked this.';
+                    }
+
+                    return React.createElement(
+                        'button',
+                        { onClick: () => this.setState({ liked: true }) },
+                        'Like'
+                    );
+                }
+            }
+
+            // const LikeButton = () => {
+            //     const [liked, setLiked] = React.useState(false);
+            //     const text = liked ? '좋아요 취소' : '좋아요';
+            //     return React.createElement(
+            //         'button',
+            //         { onClick: () => setLiked(!liked) },
+            //         text
+            //     );
+            // };
+        </script>
+        <script>
+            ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(LikeButton));
+            // ReactDOM.render(
+            //     React.createElement(LikeButton),
+            //     document.getElementById('root')
+            // );
+        </script>
+    </body>
+</html>
