@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script type="text/babel">
+    class GuGuDan extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+            first: Math.ceil(Math.random() * 9),
+            second: Math.ceil(Math.random() * 9),
+            value: '',
+            result: '',
+            };
+        }
+
+      render() {
+        return (
+          <div>
+            <div>{this.state.first} 곱하기 {this.state.second}는?</div>
+            <form onSubmit={this.onSubmitForm}>
+              <input type="number" value={this.state.value} onChange={this.onChangeInput} />
+              <button>입력!</button>
+            </form>
+            <div id="result">{this.state.result}</div>
+          </div>
+        );
+      }
+
+      onSubmitForm = (e) => {
+        e.preventDefault();
+        if (this.state.first * this.state.second === parseInt(this.state.value)) {
+          this.setState((prevState) => {
+            return {
+              result: '정답: ' + prevState.value,
+              first: Math.ceil(Math.random() * 9),
+              second: Math.ceil(Math.random() * 9),
+              value: '',
+            };
+          });
+        } else {
+          this.setState({
+            result: '땡',
+            value: '',
+          });
+        }
+      }
+
+      onChangeInput = (e) => {
+        this.setState({value: e.target.value});
+      }
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<GuGuDan/>);
+  </script>
+</body>
+</html>
