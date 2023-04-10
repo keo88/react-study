@@ -23,14 +23,14 @@
 
       render() {
         return (
-          <div>
+          <React.Fragment>
             <div>{this.state.first} 곱하기 {this.state.second}는?</div>
             <form onSubmit={this.onSubmitForm}>
               <input type="number" value={this.state.value} onChange={this.onChangeInput} />
               <button>입력!</button>
             </form>
             <div id="result">{this.state.result}</div>
-          </div>
+          </React.Fragment>
         );
       }
 
@@ -54,6 +54,7 @@
       }
 
       onChangeInput = (e) => {
+        console.log(this);
         this.setState({value: e.target.value});
       }
     }

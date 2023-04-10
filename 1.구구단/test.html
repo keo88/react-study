@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+<divid id="root"></divid>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script type="text/babel">
+    function printThis() {
+        console.log(this);
+    }
+
+    let TestButton = () => {
+        return (
+            <input type="button" value="click" id="btn"/>
+        );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<TestButton/>);
+
+    function printThis2() {
+        console.log(this);
+    }
+    const inputSl = document.getElementById('btn');
+    console.log(inputSl);
+    inputSl.onclick = printThis2;
+
+</script>
+<script>
+
+</script>
+</body>
+</html>
