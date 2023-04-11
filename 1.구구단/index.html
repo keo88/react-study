@@ -11,6 +11,7 @@
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script type="text/babel">
     class GuGuDan extends React.Component {
+      inputElem;
       constructor(props) {
         super(props);
         this.state = {
@@ -26,12 +27,16 @@
           <React.Fragment>
             <div>{this.state.first} 곱하기 {this.state.second}는?</div>
             <form onSubmit={this.onSubmitForm}>
-              <input type="number" value={this.state.value} onChange={this.onChangeInput} />
+              <input ref= {this.onLoadInput} type="number" value={this.state.value} onChange={this.onChangeInput} />
               <button>입력!</button>
             </form>
             <div id="result">{this.state.result}</div>
           </React.Fragment>
         );
+      }
+
+      onLoadInput = (c) => {
+          this.inputElem = c;
       }
 
       onSubmitForm = (e) => {
@@ -45,6 +50,8 @@
               value: '',
             };
           });
+
+          this.inputElem.focus();
         } else {
           this.setState({
             result: '땡',

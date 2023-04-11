@@ -11,8 +11,14 @@
     }
 
     let TestButton = () => {
+        let inputElem = null;
+        let onLoadInput = (c) => {
+            inputElem = c;
+            inputElem.onclick = printThis2;
+        }
+
         return (
-            <input type="button" value="click" id="btn"/>
+            <input ref={onLoadInput} type="button" value="click" id="btn"/>
         );
     };
 
@@ -21,9 +27,6 @@
     function printThis2() {
         console.log(this);
     }
-    const inputSl = document.getElementById('btn');
-    console.log(inputSl);
-    inputSl.onclick = printThis2;
 
 </script>
 <script>
