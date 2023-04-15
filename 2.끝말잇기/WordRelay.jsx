@@ -1,7 +1,7 @@
 const React = require('react');
 
 function WordRelay() {
-    const [title, setTitle] = React.useState('끝말잇기');
+    const [title, setTitle] = React.useState('초밥');
     const [wordValue, setWordValue] = React.useState('');
     const inputElem = React.useRef(null);
 
