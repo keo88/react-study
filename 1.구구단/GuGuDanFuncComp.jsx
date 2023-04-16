@@ -1,4 +1,5 @@
 const React = require("react");
+const {useEffect} = require("react");
 const GuGuDanFuncComp = () => {
     const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
     const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
@@ -6,6 +7,12 @@ const GuGuDanFuncComp = () => {
     const [result, setResult] = React.useState('');
 
     const inputElem = React.useRef(null);
+
+
+    useEffect(() => {
+        console.log('useEffect rendered');
+    }, [result]);
+    console.log('GuGuDanFuncComp rendered');
 
     const onSubmit = (e) => {
         e.preventDefault();
