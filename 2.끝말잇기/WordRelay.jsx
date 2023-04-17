@@ -1,6 +1,6 @@
 const React = require('react');
 
-function WordRelay() {
+const WordRelay = () => {
     const [title, setTitle] = React.useState('초밥');
     const [wordValue, setWordValue] = React.useState('');
     const inputElem = React.useRef(null);
@@ -23,7 +23,7 @@ function WordRelay() {
         <>
             <div>{title}</div>
             <form onSubmit={onSubmitForm}>
-                <input value={wordValue} ref={inputElem} onChange={onWordInput}/>
+                <input ref={inputElem} value={wordValue} onChange={onWordInput}/>
                 <button>입력!</button>
             </form>
         </>
