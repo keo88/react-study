@@ -70,15 +70,29 @@
                 );
             }
 
-            // const LikeButton = () => {
-            //     const [liked, setLiked] = React.useState(false);
-            //     const text = liked ? '좋아요 취소' : '좋아요';
-            //     return React.createElement(
-            //         'button',
-            //         { onClick: () => setLiked(!liked) },
-            //         text
-            //     );
-            // };
+            class ClassComponent extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = { value: false };
+                }
+                someMethod = () => {
+                    this.setState({ value: true });
+                }
+
+                render() {
+                    return (/* jsx 문법 */);
+                }
+            }
+
+            const FunctionalComponent = () => {
+                const [value, setValue] = React.useState(false);
+
+                const someMethod = () => {
+                    setValue(true);
+                }
+
+                return (/* jsx 문법 */);
+            };
 
             ReactDOM.createRoot(document.getElementById('root')).render(<LikeButton/>);
         </script>
