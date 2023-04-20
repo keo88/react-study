@@ -73,28 +73,44 @@
             class ClassComponent extends React.Component {
                 constructor(props) {
                     super(props);
-                    this.state = { value: false };
+                    this.state = { value1: false, value2: 1 };
                 }
                 someMethod = () => {
-                    this.setState({ value: true });
+                    this.setState({ value1: true });
                 }
 
                 render() {
-                    return (/* jsx 문법 */);
+                    console.log('rendered');
+                    return (
+                        <React.Fragment>
+                            <b>{this.state.value2}</b>
+                            <p>The value is: {this.state.value1 ? 'true' : 'false'}</p>
+                            <button onClick={this.someMethod}>Click me</button>
+                        </React.Fragment>
+                    );
                 }
             }
 
             const FunctionalComponent = () => {
-                const [value, setValue] = React.useState(false);
+                const [value1, setValue1] = React.useState(false);
+                const [value2, setValue2] = React.useState(1);
 
                 const someMethod = () => {
-                    setValue(true);
+                    setValue1(true);
                 }
 
-                return (/* jsx 문법 */);
+                console.log('rendered');
+
+                return (
+                    <React.Fragment>
+                        <b>{value2}</b>
+                        <p>The value is: {value1 ? 'true' : 'false'}</p>
+                        <button onClick={someMethod}>Click me</button>
+                    </React.Fragment>
+                );
             };
 
-            ReactDOM.createRoot(document.getElementById('root')).render(<LikeButton/>);
+            ReactDOM.createRoot(document.getElementById('root')).render(<FunctionalComponent/>);
         </script>
     </body>
 </html>
