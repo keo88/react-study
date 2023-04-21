@@ -2,6 +2,7 @@ const React = require('react');
 
 const NumberBaseBall = () => {
     const [answer, setAnswer] = React.useState([1, 2, 3, 4]);
+    const [inputs, setInputs] = React.useState([]);
     const [trials, setTrials] = React.useState(0);
     const [result , setResult] = React.useState('');
     const maxTrials = 9;
@@ -41,17 +42,21 @@ const NumberBaseBall = () => {
         let calcBalls;
 
         ({ calcStrikes, calcBalls } = calculateScore(values));
+        inputs.push(values);
+        // setInputs([...inputs, values]);
 
         if (calcStrikes === 4) {
-            setResult(`성공`);
-            setAnswer([getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()]);
+            setResult(`성공 ${answer}`);
+            setAnswer(answer.map(() => getRandomNumber()));
             setTrials(0);
+            setInputs([]);
         } else {
             setTrials(trials + 1);
             if (trials === maxTrials) {
                 setResult(`실패`);
-                setAnswer([getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()]);
+                setAnswer(answer.map(() => getRandomNumber()));
                 setTrials(0);
+                setInputs([]);
             } else {
                 setResult(`strikes: ${calcStrikes} balls: ${calcBalls}`);
             }
@@ -68,6 +73,9 @@ const NumberBaseBall = () => {
             </form>
             <div>{result}</div>
             <div>시도: {trials}</div>
+            <ul>
+                {inputs.map((v, i) => <li key={`${i}`}>{v}</li>)}
+            </ul>
         </>
     );
 };
