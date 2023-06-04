@@ -43,8 +43,7 @@ const NumberBaseBall = () => {
         let calcBalls;
 
         ({ calcStrikes, calcBalls } = calculateScore(values));
-        inputs.push(values);
-        // setInputs([...inputs, values]);
+        setInputs([...inputs, values]);
 
         if (calcStrikes === 4) {
             setResult(`성공 ${answer}`);
