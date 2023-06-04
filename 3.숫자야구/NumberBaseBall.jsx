@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from "react";
+import TryComponent from "./Try";
 
 const NumberBaseBall = () => {
     const [answer, setAnswer] = React.useState([1, 2, 3, 4]);
@@ -74,7 +75,7 @@ const NumberBaseBall = () => {
             <div>{result}</div>
             <div>시도: {trials}</div>
             <ul>
-                {inputs.map((v, i) => <li key={`${i}`}>{v}</li>)}
+                {inputs.map((v, i) => <TryComponent value={v} index={i} />)}
             </ul>
         </>
     );
