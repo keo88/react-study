@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 const NumberBaseBall = () => {
     const [answer, setAnswer] = React.useState([1, 2, 3, 4]);
@@ -80,4 +80,4 @@ const NumberBaseBall = () => {
     );
 };
 
-module.exports = NumberBaseBall;
+export default NumberBaseBall;
