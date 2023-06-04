@@ -43,8 +43,7 @@ const NumberBaseBall = () => {
         let calcBalls;
 
         ({ calcStrikes, calcBalls } = calculateScore(values));
-        setInputs([...inputs, values]);
-
+        setInputs([...inputs, {value: values, strikes: calcStrikes, balls: calcBalls}]);
         if (calcStrikes === 4) {
             setResult(`성공 ${answer}`);
             setAnswer(answer.map(() => getRandomNumber()));
