@@ -52,7 +52,7 @@ const NumberBaseBall = () => {
         } else {
             setTrials(trials + 1);
             if (trials === maxTrials) {
-                setResult(`실패`);
+                setResult("실패");
                 setAnswer(answer.map(() => getRandomNumber()));
                 setTrials(0);
                 setInputs([]);
