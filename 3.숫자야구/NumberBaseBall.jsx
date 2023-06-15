@@ -43,7 +43,7 @@ const NumberBaseBall = () => {
         let calcBalls;
 
         ({ calcStrikes, calcBalls } = calculateScore(values));
-        setInputs([...inputs, {value: values, strikes: calcStrikes, balls: calcBalls}]);
+        setInputs((prevInputs) => [...prevInputs, {value: values, strikes: calcStrikes, balls: calcBalls}]);
         if (calcStrikes === 4) {
             setResult(`성공 ${answer}`);
             setAnswer(answer.map(() => getRandomNumber()));
@@ -73,7 +73,7 @@ const NumberBaseBall = () => {
             <div>{result}</div>
             <div>시도: {trials}</div>
             <ul>
-                {inputs.map((v, i) => <TryComponent value={v} index={i} />)}
+                {inputs.map((v, i) => <TryComponent value={v} index={i} key={`${i}-${v}`}/>)}
             </ul>
         </>
     );
