@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './ResponseCheck.css';
 
 
@@ -12,10 +12,19 @@ interface IState {
     result: number[];
 }
 
-class ResponseCheck extends Component<IProps, IState> {
+class ResponseCheck extends PureComponent<IProps, IState> {
+
+    private timeout: NodeJS.Timeout | null;
+    private startTime: Date;
+    private endTime: Date;
 
     constructor (props: IProps) {
         super(props);
+
+        this.timeout = null;
+        this.startTime = new Date();
+        this.endTime = new Date();
+
         this.state = {
             screenState: 'waiting',
             message: '클릭해서 시작하세요.',
@@ -54,13 +63,32 @@ class ResponseCheck extends Component<IProps, IState> {
             nextScreenState = 'ready';
             nextMessage = '초록색이 되면 클릭하세요.';
 
-            setTimeout(this.switchToNowState, Math.floor(Math.random() * 1000) + 2000);
+            this.timeout = setTimeout(this.switchToNowState, Math.floor(Math.random() * 1000) + 2000);
 
         } else if (screenState === 'ready') {
-            nextScreenState = 'ready';
+            nextScreenState = 'waiting';
             nextMessage = '너무 성급하시군요! 초록색이 된 후에 클릭하세요.';
-        } else {
+
+            if (this.timeout !== null) {
+                clearTimeout(this.timeout);
+            }
+
+        } else if (screenState === 'now') {
             // when current state is 'now'.
+
+            this.endTime = new Date();
+
+            this.setState((prevState) => {
+                return {
+                    screenState: 'waiting',
+                    message: '클릭해서 시작하세요.',
+                    result: [...prevState.result, (this.endTime.getTime() - this.startTime.getTime())],
+                }
+            });
+
+            return;
+
+        } else {
             nextScreenState = 'waiting';
             nextMessage = '클릭해서 시작하세요.';
         }
@@ -73,6 +101,8 @@ class ResponseCheck extends Component<IProps, IState> {
 
     private switchToNowState = () : void => {
         if (this.state.screenState !== 'ready') return;
+
+        this.startTime = new Date();
 
         this.setState({
             screenState: 'now',
