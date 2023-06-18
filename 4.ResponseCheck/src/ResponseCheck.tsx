@@ -1,16 +1,16 @@
-import React, {PureComponent, useState} from 'react';
+import React, {PureComponent, useRef, useState} from 'react';
 import './ResponseCheck.css';
 
 
-interface IProps {
-    // props
-}
-
-interface IState {
-    screenState: 'waiting' | 'ready' | 'now';
-    message: string;
-    result: number[];
-}
+// interface IProps {
+//     // props
+// }
+//
+// interface IState {
+//     screenState: 'waiting' | 'ready' | 'now';
+//     message: string;
+//     result: number[];
+// }
 
 // class ResponseCheck extends PureComponent<IProps, IState> {
 //
@@ -113,49 +113,52 @@ interface IState {
 
 function ResponseCheck() {
 
-    let [screenState, setScreenState] = useState<'waiting' | 'ready' | 'now'>('waiting');
-    let [message, setMessage] = useState<string>('클릭해서 시작하세요.');
-    let [result, setResult] = useState<number[]>([]);
+    const [screenState, setScreenState] = useState<'waiting' | 'ready' | 'now'>('waiting');
+    const [message, setMessage] = useState<string>('클릭해서 시작하세요.');
+    const [result, setResult] = useState<number[]>([]);
 
-    let timeout: NodeJS.Timeout | null = null;
-    let startTime: Date = new Date();
-    let endTime: Date = new Date();
+    const timeout = useRef<NodeJS.Timeout | null>(null);
+    const startTime = useRef<Date>(new Date());
+    const endTime = useRef<Date>(new Date());
 
 
     const onClickScreen = () : void => {
         switchBetweenState();
-
-        console.log("clicked");
     }
+
+    console.log('initial screenState: ' + screenState);
 
     const switchBetweenState = () : void => {
 
         let nextScreenState : "waiting" | "ready" | "now";
         let nextMessage : string;
 
+
         if (screenState === 'waiting') {
             nextScreenState = 'ready';
             nextMessage = '초록색이 되면 클릭하세요.';
 
-            timeout = setTimeout(switchToNowState, Math.floor(Math.random() * 1000) + 2000);
+            timeout.current = setTimeout(switchToNowState, Math.floor(Math.random() * 1000) + 2000);
+            console.log('screen state: waiting: ');
 
         } else if (screenState === 'ready') {
             nextScreenState = 'waiting';
             nextMessage = '너무 성급하시군요! 초록색이 된 후에 클릭하세요.';
 
-            if (timeout !== null) {
-                clearTimeout(timeout);
+            console.log('screen state: ready: ' + timeout.current);
+            if (timeout.current !== null) {
+                clearTimeout(timeout.current);
             }
 
         } else if (screenState === 'now') {
             // when current state is 'now'.
 
-            endTime = new Date();
+            endTime.current = new Date();
 
             setScreenState('waiting');
             setMessage('클릭해서 시작하세요.');
             setResult((prevResult) => {
-                return [...prevResult, (endTime.getTime() - startTime.getTime())]
+                return [...prevResult, (endTime.current.getTime() - startTime.current.getTime())]
             });
 
             return;
@@ -165,14 +168,14 @@ function ResponseCheck() {
             nextMessage = '클릭해서 시작하세요.';
         }
 
+        console.log('screen state: ' + nextScreenState);
         setScreenState(nextScreenState);
         setMessage(nextMessage);
     }
 
     const switchToNowState = () : void => {
-        if (screenState !== 'ready') return;
 
-        startTime = new Date();
+        startTime.current = new Date();
 
         setScreenState('now');
         setMessage('지금 클릭');
