@@ -1,4 +1,4 @@
-import React, {PureComponent, useRef, useState} from 'react';
+import React, {PureComponent, useEffect, useRef, useState} from 'react';
 import './ResponseCheck.css';
 
 
@@ -121,12 +121,19 @@ function ResponseCheck() {
     const startTime = useRef<Date>(new Date());
     const endTime = useRef<Date>(new Date());
 
+    const screenStateRef = useRef(screenState);
+
+    useEffect(
+        () => {
+            screenStateRef.current = screenState;
+        },
+        [screenState]
+    );
+
 
     const onClickScreen = () : void => {
         switchBetweenState();
     }
-
-    console.log('initial screenState: ' + screenState);
 
     const switchBetweenState = () : void => {
 
@@ -139,13 +146,11 @@ function ResponseCheck() {
             nextMessage = '초록색이 되면 클릭하세요.';
 
             timeout.current = setTimeout(switchToNowState, Math.floor(Math.random() * 1000) + 2000);
-            console.log('screen state: waiting: ');
 
         } else if (screenState === 'ready') {
             nextScreenState = 'waiting';
             nextMessage = '너무 성급하시군요! 초록색이 된 후에 클릭하세요.';
 
-            console.log('screen state: ready: ' + timeout.current);
             if (timeout.current !== null) {
                 clearTimeout(timeout.current);
             }
@@ -168,12 +173,13 @@ function ResponseCheck() {
             nextMessage = '클릭해서 시작하세요.';
         }
 
-        console.log('screen state: ' + nextScreenState);
         setScreenState(nextScreenState);
         setMessage(nextMessage);
     }
 
     const switchToNowState = () : void => {
+
+        if (screenStateRef.current !== 'ready') return;
 
         startTime.current = new Date();
 
