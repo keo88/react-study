@@ -1,17 +1,23 @@
-#screen {
+.screen {
     width: 300px;
-    height: 200px;
+    height: 300px;
     text-align: center;
 }
-#screen.waiting {
+.screen .waiting {
+    width: 300px;
+    height: 200px;
     background-color: aquamarine;
     color: black;
 }
-#screen.ready {
+.screen .ready {
+    width: 300px;
+    height: 200px;
     background-color: darkred;
     color: white;
 }
-#screen.now {
+.screen .now {
+    width: 300px;
+    height: 200px;
     background-color: greenyellow;
     color: black;
 }

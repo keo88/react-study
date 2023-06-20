@@ -188,8 +188,8 @@ function ResponseCheck() {
     }
 
     return (
-        <>
-            <div id="screen" className={screenState} onClick={onClickScreen}>
+        <div className="screen">
+            <div className={screenState} onClick={onClickScreen}>
                 {message}
             </div>
             {
@@ -197,7 +197,7 @@ function ResponseCheck() {
                     평균 시간: {result.reduce((a : number ,c : number) => a + c) / result.length}
                 </div>
             }
-        </>
+        </div>
     );
 }
 
