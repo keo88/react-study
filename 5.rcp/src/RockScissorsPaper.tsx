@@ -1,16 +1,16 @@
 import {useEffect, useRef, useState} from 'react';
 
-interface IScoreDictionary<TValue> {
+interface IDictionary<TValue> {
   [id: string]: TValue;
 }
 
-const rspCoords = {
+const rspCoords : IDictionary<string> = {
   rock: '0',
   scissors: '-142px',
   paper: '-284px',
 };
 
-const scores : IScoreDictionary<number> = {
+const scores : IDictionary<number> = {
   'rock': 0,
   'scissors': 1,
   'paper': -1,
