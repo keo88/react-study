@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import useInterval from "./useInterval";
 
 interface IDictionary<TValue> {
   [id: string]: TValue;
@@ -16,6 +17,12 @@ const scores: IDictionary<number> = {
   'paper': -1,
 };
 
+const computerChoice = (imgCoord: string) => {
+  return Object.entries(rspCoords).find(function (v) {
+    return v[1] === imgCoord;
+  })![0];
+}
+
 function RockScissorsPaper() {
   const intervalTime = 100;
   const intervalRestartTime = 1000;
@@ -23,13 +30,13 @@ function RockScissorsPaper() {
   const [imgCoord, setImgCoord] = useState(rspCoords.rock);
   const [result, setResult] = useState('');
   const [score, setScore] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
+
 
   let intervalObj = useRef<NodeJS.Timer | null>(null);
-  let imgCoordRef = useRef<string>(imgCoord);
 
   const componentDidMount = () => {
     console.log('componentDidMount');
-    intervalObj.current = setInterval(switchComputerRspState, intervalTime);
   }
 
   const componentWillUnmount = () => {
@@ -44,23 +51,13 @@ function RockScissorsPaper() {
     return componentWillUnmount;
   }, []);
 
-  useEffect(() => {
-    imgCoordRef.current = imgCoord;
-  }, [imgCoord]);
-
-  const computerChoice = (imgCoord: string) => {
-    return Object.entries(rspCoords).find(function (v) {
-      return v[1] === imgCoord;
-    })![0];
-  }
-
   const onClickBtn = (userChoice: string) => () => {
-    if (intervalObj.current) {
-      clearInterval(intervalObj.current);
+    if (isRunning) {
+      setIsRunning(false);
     }
 
     const userScore = scores[userChoice];
-    const comScore = scores[computerChoice(imgCoordRef.current)];
+    const comScore = scores[computerChoice(imgCoord)];
 
     // console.log('userScore', userScore, 'comScore', comScore);
 
@@ -76,7 +73,7 @@ function RockScissorsPaper() {
     }
 
     setTimeout(() => {
-      intervalObj.current = setInterval(switchComputerRspState, intervalTime);
+      setIsRunning(true);
     }, intervalRestartTime);
   };
 
@@ -84,11 +81,11 @@ function RockScissorsPaper() {
 
     let nextImgCoord: string;
 
-    if (imgCoordRef.current === rspCoords.rock) {
+    if (imgCoord === rspCoords.rock) {
       nextImgCoord = rspCoords.scissors;
-    } else if (imgCoordRef.current === rspCoords.scissors) {
+    } else if (imgCoord === rspCoords.scissors) {
       nextImgCoord = rspCoords.paper;
-    } else if (imgCoordRef.current === rspCoords.paper) {
+    } else if (imgCoord === rspCoords.paper) {
       nextImgCoord = rspCoords.rock;
     } else {
       throw new Error('Unknown rspCoords');
@@ -96,6 +93,8 @@ function RockScissorsPaper() {
 
     setImgCoord(nextImgCoord);
   }
+
+  useInterval(switchComputerRspState, isRunning ? intervalTime : null);
 
   return (
     <>
