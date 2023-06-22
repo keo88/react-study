@@ -44,6 +44,10 @@ function RockScissorsPaper() {
     return componentWillUnmount;
   }, []);
 
+  useEffect(() => {
+    imgCoordRef.current = imgCoord;
+  }, [imgCoord]);
+
   const computerChoice = (imgCoord: string) => {
     return Object.entries(rspCoords).find(function (v) {
       return v[1] === imgCoord;
@@ -91,7 +95,6 @@ function RockScissorsPaper() {
     }
 
     setImgCoord(nextImgCoord);
-    imgCoordRef.current = nextImgCoord;
   }
 
   return (
