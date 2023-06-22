@@ -4,13 +4,13 @@ interface IDictionary<TValue> {
   [id: string]: TValue;
 }
 
-const rspCoords : IDictionary<string> = {
+const rspCoords: IDictionary<string> = {
   rock: '0',
   scissors: '-142px',
   paper: '-284px',
 };
 
-const scores : IDictionary<number> = {
+const scores: IDictionary<number> = {
   'rock': 0,
   'scissors': 1,
   'paper': -1,
@@ -45,7 +45,7 @@ function RockScissorsPaper() {
   }, []);
 
   const computerChoice = (imgCoord: string) => {
-    return Object.entries(rspCoords).find(function(v) {
+    return Object.entries(rspCoords).find(function (v) {
       return v[1] === imgCoord;
     })![0];
   }
@@ -94,12 +94,13 @@ function RockScissorsPaper() {
     imgCoordRef.current = nextImgCoord;
   }
 
-  return (<>
+  return (
+    <>
       <div id="computer" style={{
         background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0`,
         width: '142px',
         height: '200px',
-      }} />
+      }}/>
       <div>
         <button id="rock" className="btn" onClick={onClickBtn('rock')}>바위</button>
         <button id="scissors" className="btn" onClick={onClickBtn('scissors')}>가위</button>
