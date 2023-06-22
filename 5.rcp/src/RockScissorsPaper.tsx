@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 const rspCoords = {
   rock: '0',
@@ -13,20 +13,53 @@ const scores = {
 }
 
 function RockScissorsPaper() {
+  const intervalTime = 100;
+
   const [imgCoord, setImgCoord] = useState(rspCoords.rock);
+
+  let intervalObj = useRef<NodeJS.Timer | null>(null);
+  let imgCoordRef = useRef<string>(imgCoord);
+
+  const componentDidMount = () => {
+    console.log('componentDidMount');
+    intervalObj.current = setInterval(switchComputerRspState, intervalTime);
+  }
+
+  const componentWillUnmount = () => {
+    console.log('componentWillUnmount');
+    if (intervalObj.current) {
+      clearInterval(intervalObj.current);
+    }
+  }
+
+  useEffect(() => {
+    componentDidMount();
+    return componentWillUnmount;
+  }, []);
 
   const onClickBtn = (s: string) => {
     return undefined;
   };
 
   const switchComputerRspState = () => {
-    if (imgCoord === rspCoords.rock) {
-      setImgCoord(rspCoords.scissors);
-    } else if (imgCoord === rspCoords.scissors) {
-      setImgCoord(rspCoords.paper);
-    } else if (imgCoord === rspCoords.paper) {
-      setImgCoord(rspCoords.rock);
+
+    console.log('switchComputerRespState');
+
+    let nextImgCoord: string;
+
+    if (imgCoordRef.current === rspCoords.rock) {
+      nextImgCoord = rspCoords.scissors;
+    } else if (imgCoordRef.current === rspCoords.scissors) {
+      nextImgCoord = rspCoords.paper;
+    } else if (imgCoordRef.current === rspCoords.paper) {
+      nextImgCoord = rspCoords.rock;
+    } else {
+      throw new Error('Unknown rspCoords');
     }
+
+    setImgCoord(nextImgCoord);
+
+    imgCoordRef.current = nextImgCoord;
   }
 
   return (<>
