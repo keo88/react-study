@@ -8,15 +8,17 @@ const Ball = memo((props: IProps) => {
   const getBallColor = (ballNo: number): string => {
     if (ballNo <= 10) {
       return 'red';
-    } else if (ballNo <= 20) {
-      return 'orange';
-    } else if (ballNo <= 30) {
-      return 'yellow';
-    } else if (ballNo <= 40) {
-      return 'blue';
-    } else {
-      return 'green';
     }
+    if (ballNo <= 20) {
+      return 'orange';
+    }
+    if (ballNo <= 30) {
+      return 'yellow';
+    }
+    if (ballNo <= 40) {
+      return 'blue';
+    }
+    return 'green';
   };
 
   return (

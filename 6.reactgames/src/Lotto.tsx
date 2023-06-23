@@ -35,22 +35,22 @@ export class LottoClass extends Component<Record<string, never>, IState> {
   }
 
   componentDidMount() {
-    for (let i = 0; i < BALLS_COUNT; i++) {
+    for (let i = 0; i < BALLS_COUNT; i += 1) {
       setTimeout(() => {
-        this.setState((prevState) => {
-          return {
-            winBalls: [...prevState.winBalls, prevState.winNumbers[i]],
-          };
-        });
+        this.setState((prevState) => ({
+          winBalls: [...prevState.winBalls, prevState.winNumbers[i]],
+        }));
       }, (i + 1) * 1000);
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   onClickRedo = () => {
     console.log('onClickRedo');
   };
 
   render() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { winNumbers, winBalls, bonus, redo } = this.state;
 
     return (
@@ -63,14 +63,18 @@ export class LottoClass extends Component<Record<string, never>, IState> {
         </div>
         <div>보너스!</div>
         {bonus && <Ball number={bonus} />}
-        {redo && <button onClick={this.onClickRedo}>한 번 더!</button>}
+        {redo && (
+          <button type="submit" onClick={this.onClickRedo}>
+            한 번 더!
+          </button>
+        )}
       </>
     );
   }
 }
 
 function Lotto() {
-  return <></>;
+  return <div>lotto</div>;
 }
 
 export default Lotto;
