@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 interface IProps {
   number: number;
 }
 
-function Ball(props: IProps) {
+const Ball = memo((props: IProps) => {
 
   const getBallColor = (ballNo: number) : string => {
     if (ballNo <= 10) {
@@ -28,6 +28,6 @@ function Ball(props: IProps) {
       {props.number}
     </div>
   );
-}
+})
 
 export default Ball;
