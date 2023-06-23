@@ -1,12 +1,11 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 
 interface IProps {
   number: number;
 }
 
 const Ball = memo((props: IProps) => {
-
-  const getBallColor = (ballNo: number) : string => {
+  const getBallColor = (ballNo: number): string => {
     if (ballNo <= 10) {
       return 'red';
     } else if (ballNo <= 20) {
@@ -18,16 +17,20 @@ const Ball = memo((props: IProps) => {
     } else {
       return 'green';
     }
-  }
-
+  };
 
   return (
-    <div className='ball' style={{
-      background: getBallColor(props.number)
-    }}>
+    <div
+      className="ball"
+      style={{
+        background: getBallColor(props.number),
+      }}
+    >
       {props.number}
     </div>
   );
-})
+});
+
+Ball.displayName = 'Ball';
 
 export default Ball;
