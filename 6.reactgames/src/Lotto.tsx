@@ -24,6 +24,8 @@ const getWinNumbers = (ball_count: number = BALLS_COUNT) => {
 };
 
 export class LottoClass extends Component<Record<string, never>, IState> {
+  mounted: boolean;
+
   constructor(props: Record<string, never>) {
     super(props);
     this.state = {
@@ -32,9 +34,14 @@ export class LottoClass extends Component<Record<string, never>, IState> {
       bonus: null,
       redo: false,
     };
+
+    this.mounted = false;
   }
 
   componentDidMount() {
+    if (this.mounted) return;
+    this.mounted = true;
+
     for (let i = 0; i < BALLS_COUNT; i += 1) {
       setTimeout(() => {
         this.setState((prevState) => ({

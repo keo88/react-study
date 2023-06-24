@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import Lotto from './Lotto';
+import { LottoClass } from './Lotto';
 
 function App() {
-  return <Lotto />;
+  return <LottoClass />;
 }
 
 export default App;
