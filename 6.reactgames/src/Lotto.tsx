@@ -39,6 +39,14 @@ export class LottoClass extends Component<Record<string, never>, IState> {
   }
 
   componentDidMount() {
+    this.startDisplay();
+  }
+
+  componentWillUnmount() {
+    this.resetTimeouts();
+  }
+
+  startDisplay = () => {
     for (let i = 0; i < BALLS_COUNT - 1; i += 1) {
       this.timeouts.push(
         setTimeout(() => {
@@ -57,22 +65,30 @@ export class LottoClass extends Component<Record<string, never>, IState> {
         }));
       }, BALLS_COUNT * 1000)
     );
-  }
+  };
 
-  componentWillUnmount() {
+  resetTimeouts = () => {
     this.timeouts.forEach((v) => {
       clearTimeout(v);
     });
-  }
+
+    this.timeouts = [];
+  };
 
   // eslint-disable-next-line class-methods-use-this
   onClickRedo = () => {
-    console.log('onClickRedo');
+    this.resetTimeouts();
+    this.setState({
+      winNumbers: getWinNumbers(),
+      winBalls: [],
+      bonus: null,
+      redo: false,
+    });
+    this.startDisplay();
   };
 
   render() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { winNumbers, winBalls, bonus, redo } = this.state;
+    const { winBalls, bonus, redo } = this.state;
 
     return (
       <>
