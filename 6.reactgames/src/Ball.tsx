@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import './Ball.css';
 
 interface IProps {
   number: number;
