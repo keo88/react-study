@@ -24,7 +24,7 @@ const getWinNumbers = (ball_count: number = BALLS_COUNT) => {
 };
 
 export class LottoClass extends Component<Record<string, never>, IState> {
-  mounted: boolean;
+  timeouts: NodeJS.Timeout[];
 
   constructor(props: Record<string, never>) {
     super(props);
@@ -35,20 +35,34 @@ export class LottoClass extends Component<Record<string, never>, IState> {
       redo: false,
     };
 
-    this.mounted = false;
+    this.timeouts = [];
   }
 
   componentDidMount() {
-    if (this.mounted) return;
-    this.mounted = true;
+    for (let i = 0; i < BALLS_COUNT - 1; i += 1) {
+      this.timeouts.push(
+        setTimeout(() => {
+          this.setState((prevState) => ({
+            winBalls: [...prevState.winBalls, prevState.winNumbers[i]],
+          }));
+        }, (i + 1) * 1000)
+      );
+    }
 
-    for (let i = 0; i < BALLS_COUNT; i += 1) {
+    this.timeouts.push(
       setTimeout(() => {
         this.setState((prevState) => ({
-          winBalls: [...prevState.winBalls, prevState.winNumbers[i]],
+          bonus: prevState.winNumbers[BALLS_COUNT - 1],
+          redo: true,
         }));
-      }, (i + 1) * 1000);
-    }
+      }, BALLS_COUNT * 1000)
+    );
+  }
+
+  componentWillUnmount() {
+    this.timeouts.forEach((v) => {
+      clearTimeout(v);
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
