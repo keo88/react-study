@@ -75,7 +75,6 @@ export class LottoClass extends Component<Record<string, never>, IState> {
     this.timeouts = [];
   };
 
-  // eslint-disable-next-line class-methods-use-this
   onClickRedo = () => {
     this.resetTimeouts();
     this.setState({
