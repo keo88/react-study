@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import Ball from './Ball';
 
 const BALLS_COUNT = 7;
@@ -110,7 +110,71 @@ export class LottoClass extends Component<Record<string, never>, IState> {
 }
 
 function Lotto() {
-  return <div>lotto</div>;
+  const [winNumbers, setWinNumbers] = React.useState<number[]>(getWinNumbers());
+  const [winBalls, setWinBalls] = React.useState<number[]>([]);
+  const [bonus, setBonus] = React.useState<null | number>(null);
+  const [redo, setRedo] = React.useState<boolean>(false);
+
+  const timeouts = React.useRef<NodeJS.Timeout[]>([]);
+
+  const startDisplay = () => {
+    for (let i = 0; i < BALLS_COUNT - 1; i += 1) {
+      timeouts.current.push(
+        setTimeout(() => {
+          setWinBalls((prevWinBalls) => [...prevWinBalls, winNumbers[i]]);
+        }, (i + 1) * 1000)
+      );
+    }
+
+    timeouts.current.push(
+      setTimeout(() => {
+        setBonus(winNumbers[BALLS_COUNT - 1]);
+        setRedo(true);
+      }, BALLS_COUNT * 1000)
+    );
+  };
+
+  const resetTimeouts = () => {
+    timeouts.current.forEach((v) => {
+      clearTimeout(v);
+    });
+
+    timeouts.current = [];
+  };
+
+  const onClickRedo = () => {
+    resetTimeouts();
+    setWinNumbers(getWinNumbers());
+    setWinBalls([]);
+    setBonus(null);
+    setRedo(false);
+    startDisplay();
+  };
+
+  useEffect(() => {
+    startDisplay();
+    return () => {
+      resetTimeouts();
+    };
+  }, []);
+
+  return (
+    <>
+      <div>당첨 숫자</div>
+      <div id="결과창">
+        {winBalls.map((v) => (
+          <Ball key={v} number={v} />
+        ))}
+      </div>
+      <div>보너스!</div>
+      {bonus && <Ball number={bonus} />}
+      {redo && (
+        <button type="submit" onClick={onClickRedo}>
+          한 번 더!
+        </button>
+      )}
+    </>
+  );
 }
 
 export default Lotto;
