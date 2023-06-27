@@ -1,10 +1,15 @@
 import React from 'react';
 import './App.css';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Lotto, { LottoClass } from './Lotto';
+import Lotto from './Lotto';
+import TicTacToe from './TicTacToe';
 
 function App() {
-  return <Lotto />;
+  return (
+    <>
+      <Lotto />
+      <TicTacToe />
+    </>
+  );
 }
 
 export default App;
