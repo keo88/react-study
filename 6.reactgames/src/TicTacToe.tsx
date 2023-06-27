@@ -1,40 +1,65 @@
 import React from 'react';
-import './TicTacToe.css';
+// eslint-disable-next-line import/no-cycle
+import TicTable from './TicTable';
 
-type UserType = 'O' | 'X';
-type WinnerType = UserType | null;
-type CellType = UserType | '';
+export const ROWS_COUNT = 3;
 
-const ROWS_COUNT = 3;
+export type UserType = 'O' | 'X';
+export type WinnerType = UserType | null;
+export type CellType = UserType | '';
+
+interface TicTacToeState {
+  tableData: CellType[][];
+  winner: WinnerType;
+  currentUserType: UserType;
+}
+
+interface TicTacToeAction {
+  type: 'SET_WINNER';
+  winner: WinnerType;
+}
+
 const initCells: CellType[][] = [
   ['', '', ''],
   ['', '', ''],
   ['', '', ''],
 ];
 
+const initialState: TicTacToeState = {
+  tableData: initCells,
+  winner: null,
+  currentUserType: 'O' as UserType,
+};
+
+const reducer = (
+  state: TicTacToeState,
+  action: TicTacToeAction
+): TicTacToeState => {
+  switch (action.type) {
+    case 'SET_WINNER':
+      return {
+        ...state,
+        winner: action.winner,
+      };
+    default:
+      return state;
+  }
+};
+
 function TicTacToe() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentUserType, setCurrentUserType] = React.useState<UserType>('O');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [winner, setWinner] = React.useState<WinnerType>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [tableData, setTableData] = React.useState<CellType[][]>(initCells);
+  const [state, dispatch] = React.useReducer(reducer, initialState, undefined);
+
+  const onClickTable = React.useCallback(() => {
+    dispatch({ type: 'SET_WINNER', winner: 'O' });
+  }, []);
 
   return (
     <>
-      <table>
-        <tbody>
-          {Array.from({ length: ROWS_COUNT }, (_, i) => (
-            <tr>
-              {Array.from({ length: ROWS_COUNT }, (__, j) => (
-                <td>{tableData[i][j]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {currentUserType && <div>Current Turn is {currentUserType} </div>}
-      {winner && <div>Winner is {winner} </div>}
+      <TicTable onClick={onClickTable} tableData={state.tableData} />
+      {state.currentUserType && (
+        <div>Current Turn is {state.currentUserType} </div>
+      )}
+      {state.winner && <div>Winner is {state.winner} </div>}
     </>
   );
 }
