@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useCallback, useEffect } from 'react';
 import Ball from './Ball';
 
 const BALLS_COUNT = 7;
@@ -110,14 +110,25 @@ export class LottoClass extends Component<Record<string, never>, IState> {
 }
 
 function Lotto() {
-  const [winNumbers, setWinNumbers] = React.useState<number[]>(getWinNumbers());
+  // const lottoNumbers = useMemo(() => getWinNumbers(), []);
+  const [winNumbers, setWinNumbers] = React.useState<number[]>([]);
   const [winBalls, setWinBalls] = React.useState<number[]>([]);
   const [bonus, setBonus] = React.useState<null | number>(null);
   const [redo, setRedo] = React.useState<boolean>(false);
 
   const timeouts = React.useRef<NodeJS.Timeout[]>([]);
 
-  const startDisplay = () => {
+  const resetTimeouts = () => {
+    timeouts.current.forEach((v) => {
+      clearTimeout(v);
+    });
+
+    timeouts.current = [];
+  };
+
+  const startDisplay = useCallback(() => {
+    if (winNumbers.length === 0) return;
+
     for (let i = 0; i < BALLS_COUNT - 1; i += 1) {
       timeouts.current.push(
         setTimeout(() => {
@@ -132,31 +143,31 @@ function Lotto() {
         setRedo(true);
       }, BALLS_COUNT * 1000)
     );
-  };
-
-  const resetTimeouts = () => {
-    timeouts.current.forEach((v) => {
-      clearTimeout(v);
-    });
-
-    timeouts.current = [];
-  };
+  }, [winNumbers]);
 
   const onClickRedo = () => {
-    resetTimeouts();
-    setWinNumbers(getWinNumbers());
+    // resetTimeouts();
+    const winNumbers1 = getWinNumbers();
+    setWinNumbers(winNumbers1);
     setWinBalls([]);
     setBonus(null);
     setRedo(false);
-    startDisplay();
   };
+
+  useEffect(() => {
+    setWinNumbers(getWinNumbers());
+
+    return () => {
+      resetTimeouts();
+    };
+  }, []);
 
   useEffect(() => {
     startDisplay();
     return () => {
       resetTimeouts();
     };
-  }, []);
+  }, [startDisplay]);
 
   return (
     <>
