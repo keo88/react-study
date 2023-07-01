@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import TicTd from './TicTd';
 import { TicTacToeAction } from './TicTaeToeModel';
 
@@ -17,10 +17,11 @@ function TicTr({ trData, trIndex, dispatch }: IProps) {
           trIndex={trIndex}
           tdIndex={i}
           dispatch={dispatch}
+          key={`${i}-td`}
         />
       ))}
     </tr>
   );
 }
 
-export default TicTr;
+export default memo(TicTr);

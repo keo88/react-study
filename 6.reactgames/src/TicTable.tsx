@@ -15,7 +15,12 @@ function TicTable({ tableData, dispatch }: IProps) {
     <table>
       <tbody>
         {Array.from({ length: tableData.length }, (_, i) => (
-          <TicTr trData={tableData[i]} trIndex={i} dispatch={dispatch} />
+          <TicTr
+            trData={tableData[i]}
+            trIndex={i}
+            dispatch={dispatch}
+            key={`${i}-tr`}
+          />
         ))}
       </tbody>
     </table>
