@@ -1,4 +1,5 @@
 import React from 'react';
+import { produce } from 'immer';
 import TicTable from './TicTable';
 import {
   CellType,
@@ -43,15 +44,11 @@ const reducer = (
       };
     }
     case 'SET_CELL': {
-      if (action.row === undefined || action.col === undefined)
-        throw new Error('row or col is null');
-      const tableData = [...state.tableData];
-      tableData[action.row] = [...tableData[action.row]];
-      tableData[action.row][action.col] = state.currentUserType;
-      return {
-        ...state,
-        tableData,
-      };
+      return produce(state, (draft) => {
+        if (action.row === undefined || action.col === undefined)
+          throw new Error('row or col is null');
+        draft.tableData[action.row][action.col] = state.currentUserType;
+      });
     }
     default: {
       return state;

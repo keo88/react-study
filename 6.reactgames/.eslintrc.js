@@ -31,6 +31,10 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react'],
   rules: {
-    quotes: ['error', 'single'],
+    'quotes': ['error', 'single'],
+    'no-param-reassign': [
+      'error',
+      { props: true, ignorePropertyModificationsFor: ['draft'] },
+    ],
   },
 };
