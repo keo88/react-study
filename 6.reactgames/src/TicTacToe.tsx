@@ -1,23 +1,11 @@
 import React from 'react';
-// eslint-disable-next-line import/no-cycle
 import TicTable from './TicTable';
-
-export const ROWS_COUNT = 3;
-
-export type UserType = 'O' | 'X';
-export type WinnerType = UserType | null;
-export type CellType = UserType | '';
-
-interface TicTacToeState {
-  tableData: CellType[][];
-  winner: WinnerType;
-  currentUserType: UserType;
-}
-
-interface TicTacToeAction {
-  type: 'SET_WINNER';
-  winner: WinnerType;
-}
+import {
+  CellType,
+  TicTacToeAction,
+  TicTacToeState,
+  UserType,
+} from './TicTaeToeModel';
 
 const initCells: CellType[][] = [
   ['', '', ''],
@@ -36,26 +24,47 @@ const reducer = (
   action: TicTacToeAction
 ): TicTacToeState => {
   switch (action.type) {
-    case 'SET_WINNER':
+    case 'RESET': {
+      return {
+        ...initialState,
+      };
+    }
+    case 'CHANGE_USER': {
+      return {
+        ...state,
+        currentUserType: state.currentUserType === 'O' ? 'X' : 'O',
+      };
+    }
+    case 'SET_WINNER': {
+      if (!action.winner) throw new Error('winner is null');
       return {
         ...state,
         winner: action.winner,
       };
-    default:
+    }
+    case 'SET_CELL': {
+      if (action.row === undefined || action.col === undefined)
+        throw new Error('row or col is null');
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...tableData[action.row]];
+      tableData[action.row][action.col] = state.currentUserType;
+      return {
+        ...state,
+        tableData,
+      };
+    }
+    default: {
       return state;
+    }
   }
 };
 
 function TicTacToe() {
   const [state, dispatch] = React.useReducer(reducer, initialState, undefined);
 
-  const onClickTable = React.useCallback(() => {
-    dispatch({ type: 'SET_WINNER', winner: 'O' });
-  }, []);
-
   return (
     <>
-      <TicTable onClick={onClickTable} tableData={state.tableData} />
+      <TicTable tableData={state.tableData} dispatch={dispatch} />
       {state.currentUserType && (
         <div>Current Turn is {state.currentUserType} </div>
       )}
