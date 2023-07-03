@@ -10,8 +10,8 @@ interface IProps {
 
 function TicTd({ tdData, trIndex, tdIndex, dispatch }: IProps) {
   const onClickTd = () => {
+    if (tdData) return;
     dispatch({ type: 'SET_CELL', row: trIndex, col: tdIndex });
-    dispatch({ type: 'CHANGE_USER' });
   };
 
   return <td onClick={onClickTd}>{tdData}</td>;

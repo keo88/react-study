@@ -15,4 +15,5 @@ export interface TicTacToeState {
   tableData: CellType[][];
   winner: WinnerType;
   currentUserType: UserType;
+  recentCells: [number, number];
 }
