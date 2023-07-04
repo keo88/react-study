@@ -1,5 +1,5 @@
 export type UserType = 'O' | 'X';
-export type WinnerType = UserType | null;
+export type WinnerType = UserType | null | 'DRAW';
 export type CellType = UserType | '';
 
 export const ROWS_COUNT = 3;

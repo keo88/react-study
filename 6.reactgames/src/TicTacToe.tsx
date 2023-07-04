@@ -64,7 +64,7 @@ const reducer = (
 
 function TicTacToe() {
   const [state, dispatch] = React.useReducer(reducer, initialState, undefined);
-  const { tableData, currentUserType, recentCells } = state;
+  const { tableData, currentUserType, recentCells, winner } = state;
 
   useEffect(() => {
     const [row, col] = recentCells;
@@ -106,17 +106,38 @@ function TicTacToe() {
     if (win) {
       dispatch({ type: 'SET_WINNER', winner: currentUserType });
     } else {
-      dispatch({ type: 'CHANGE_USER' });
+      let isFull = true;
+      const flatCells = tableData.flat();
+      flatCells.forEach((cell) => {
+        if (!cell) {
+          isFull = false;
+        }
+      });
+
+      if (!isFull) {
+        dispatch({ type: 'CHANGE_USER' });
+      } else {
+        dispatch({ type: 'SET_WINNER', winner: 'DRAW' });
+      }
     }
-  }, [state.tableData]);
+  }, [tableData]);
+
+  const resetMatch = () => {
+    dispatch({ type: 'RESET' });
+  };
 
   return (
     <>
-      <TicTable tableData={state.tableData} dispatch={dispatch} />
-      {state.currentUserType && (
-        <div>Current Turn is {state.currentUserType} </div>
+      <TicTable tableData={tableData} dispatch={dispatch} />
+      {currentUserType && <div>Current Turn is {currentUserType} </div>}
+      {winner && (
+        <div> {winner !== 'DRAW' ? `Winner is ${winner}` : 'Draw.'} </div>
       )}
-      {state.winner && <div>Winner is {state.winner} </div>}
+      {winner && (
+        <button type="submit" onClick={resetMatch}>
+          Reset
+        </button>
+      )}
     </>
   );
 }
