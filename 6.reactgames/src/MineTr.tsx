@@ -10,7 +10,7 @@ function MineTr({ trData }: IProps) {
   return (
     <tr>
       {Array.from({ length: trData.length }, (_, i) => (
-        <MineTd tdData={trData[i]} />
+        <MineTd key={`${i}-td`} tdData={trData[i]} />
       ))}
     </tr>
   );
