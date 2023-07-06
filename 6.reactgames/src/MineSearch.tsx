@@ -1,5 +1,6 @@
 import React, { useReducer, useMemo } from 'react';
 import { produce } from 'immer';
+import Queue from './Queue';
 import MineInitForm from './MineInitForm';
 import { CODE, MineSearchAction, MineSearchState } from './MineSearchModel';
 import MineTable from './MineTable';
@@ -42,28 +43,47 @@ const plantMine = (row: number, col: number, mine: number): number[][] => {
   return data;
 };
 
-const countNearMine = (row: number, col: number, tableData: number[][]) => {
-  const near: number[] = [];
-  const checkRow = [row - 1, row, row + 1];
-  const checkCol = [col - 1, col, col + 1];
+interface NearItem {
+  data: number;
+  row: number;
+  col: number;
+}
+
+const countNearMine = (
+  rowParam: number,
+  colParam: number,
+  tableData: number[][]
+) => {
+  const near: NearItem[] = [];
+  const checkRow = [rowParam - 1, rowParam, rowParam + 1];
+  const checkCol = [colParam - 1, colParam, colParam + 1];
   checkRow.forEach((r) => {
     checkCol.forEach((c) => {
-      if (r === row && c === col) {
+      if (r === rowParam && c === colParam) {
         return;
       }
       if (tableData[r] && tableData[r][c]) {
-        near.push(tableData[r][c]);
+        const data = tableData[r][c];
+        const row = r;
+        const col = c;
+        near.push({ data, row, col });
       }
     });
   });
 
-  return near.filter((v) =>
-    [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
+  const len = near.filter((v) =>
+    [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v.data)
   ).length;
+
+  return {
+    near,
+    len,
+  };
 };
 
 const reducer = (state: MineSearchState, action: MineSearchAction) => {
   let targetCellType: number;
+  let searchQueue: Queue<[number, number]>;
 
   switch (action.type) {
     case 'START_GAME':
@@ -76,11 +96,25 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
       return {
         ...state,
         tableData: produce(state.tableData, (draft) => {
-          draft[action.row][action.col] = countNearMine(
-            action.row,
-            action.col,
-            state.tableData
-          );
+          searchQueue = new Queue();
+          searchQueue.enqueue([action.row, action.col]);
+
+          while (!searchQueue.isEmpty()) {
+            const [row, col] = searchQueue.dequeue();
+            const { near, len } = countNearMine(row, col, draft);
+
+            draft[row][col] = len;
+
+            if (len === 0) {
+              for (let i = 0; i < near.length; i += 1) {
+                const r = near[i].row;
+                const c = near[i].col;
+                if (draft[r][c] < CODE.OPENED) {
+                  searchQueue.enqueue([r, c]);
+                }
+              }
+            }
+          }
         }),
       };
     case 'CLICK_MINE':
