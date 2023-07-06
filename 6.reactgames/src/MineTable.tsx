@@ -11,7 +11,7 @@ function MineTable({ tableData }: IProps) {
     <table>
       <tbody>
         {Array.from({ length: tableData.length }, (_, i) => (
-          <MineTr trData={tableData[i]} key={`${i}-tr`} />
+          <MineTr trData={tableData[i]} row={i} key={`${i}-tr`} />
         ))}
       </tbody>
     </table>

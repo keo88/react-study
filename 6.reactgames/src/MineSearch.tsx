@@ -1,4 +1,5 @@
 import React, { useReducer, useMemo } from 'react';
+import { produce } from 'immer';
 import MineInitForm from './MineInitForm';
 import { CODE, MineSearchAction, MineSearchState } from './MineSearchModel';
 import MineTable from './MineTable';
@@ -8,6 +9,7 @@ const initialState: MineSearchState = {
   tableData: [],
   timer: 0,
   result: '',
+  halted: false,
 };
 
 const plantMine = (row: number, col: number, mine: number): number[][] => {
@@ -40,11 +42,62 @@ const plantMine = (row: number, col: number, mine: number): number[][] => {
   return data;
 };
 const reducer = (state: MineSearchState, action: MineSearchAction) => {
+  let targetCellType: number;
+
   switch (action.type) {
     case 'START_GAME':
       return {
         ...state,
         tableData: plantMine(action.row, action.col, action.mine),
+        halted: false,
+      };
+    case 'OPEN_CELL':
+      return {
+        ...state,
+        tableData: produce(state.tableData, (draft) => {
+          draft[action.row][action.col] = CODE.OPENED;
+        }),
+      };
+    case 'CLICK_MINE':
+      return {
+        ...state,
+        tableData: produce(state.tableData, (draft) => {
+          draft[action.row][action.col] = CODE.CLICKED_MINE;
+        }),
+        halted: true,
+      };
+    case 'FLAG_CELL':
+      targetCellType =
+        state.tableData[action.row][action.col] === CODE.MINE
+          ? CODE.FLAG_MINE
+          : CODE.FLAG;
+      return {
+        ...state,
+        tableData: produce(state.tableData, (draft) => {
+          draft[action.row][action.col] = targetCellType;
+        }),
+      };
+    case 'QUESTION_CELL':
+      targetCellType =
+        state.tableData[action.row][action.col] === CODE.FLAG_MINE
+          ? CODE.QUESTION_MINE
+          : CODE.QUESTION;
+      return {
+        ...state,
+        tableData: produce(state.tableData, (draft) => {
+          draft[action.row][action.col] = targetCellType;
+        }),
+      };
+    case 'NORMALIZE_CELL':
+      targetCellType =
+        state.tableData[action.row][action.col] === CODE.QUESTION_MINE
+          ? CODE.MINE
+          : CODE.NORMAL;
+      return {
+        ...state,
+        tableData: produce(state.tableData, (draft) => {
+          draft[action.row][action.col] = targetCellType;
+        }),
       };
     default:
       return state;
