@@ -1,7 +1,8 @@
 import React from 'react';
+import { CellType } from './MineSearchModel';
 
 interface IProps {
-  tdData: string;
+  tdData: CellType;
 }
 
 function MineTd({ tdData }: IProps) {

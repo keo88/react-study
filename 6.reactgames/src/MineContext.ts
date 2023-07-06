@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
-import { MineSearchAction } from './MineSearchModel';
+import { CellType, MineSearchAction } from './MineSearchModel';
 
 export interface MineSearchContextType {
-  tableData: string[][];
+  tableData: CellType[][];
   dispatch: React.Dispatch<MineSearchAction>;
 }
 
