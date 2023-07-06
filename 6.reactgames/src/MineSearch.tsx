@@ -41,6 +41,27 @@ const plantMine = (row: number, col: number, mine: number): number[][] => {
 
   return data;
 };
+
+const countNearMine = (row: number, col: number, tableData: number[][]) => {
+  const near: number[] = [];
+  const checkRow = [row - 1, row, row + 1];
+  const checkCol = [col - 1, col, col + 1];
+  checkRow.forEach((r) => {
+    checkCol.forEach((c) => {
+      if (r === row && c === col) {
+        return;
+      }
+      if (tableData[r] && tableData[r][c]) {
+        near.push(tableData[r][c]);
+      }
+    });
+  });
+
+  return near.filter((v) =>
+    [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
+  ).length;
+};
+
 const reducer = (state: MineSearchState, action: MineSearchAction) => {
   let targetCellType: number;
 
@@ -55,7 +76,11 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
       return {
         ...state,
         tableData: produce(state.tableData, (draft) => {
-          draft[action.row][action.col] = CODE.OPENED;
+          draft[action.row][action.col] = countNearMine(
+            action.row,
+            action.col,
+            state.tableData
+          );
         }),
       };
     case 'CLICK_MINE':

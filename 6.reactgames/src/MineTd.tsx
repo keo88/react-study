@@ -42,7 +42,7 @@ const getTdText = (tdData: number) => {
       return '?';
     case CODE.OPENED:
     default:
-      return `${tdData}`;
+      return tdData || '';
   }
 };
 
