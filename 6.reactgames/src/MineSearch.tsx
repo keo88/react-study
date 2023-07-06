@@ -111,9 +111,12 @@ function MineSearch() {
     undefined
   );
 
-  const { tableData, timer, result } = mineSearchState;
+  const { tableData, timer, result, halted } = mineSearchState;
 
-  const contextValue = useMemo(() => ({ tableData, dispatch }), [tableData]);
+  const contextValue = useMemo(
+    () => ({ tableData, dispatch, halted }),
+    [halted, tableData]
+  );
 
   return (
     <MineSearchContext.Provider value={contextValue}>

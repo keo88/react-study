@@ -47,9 +47,10 @@ const getTdText = (tdData: number) => {
 };
 
 function MineTd({ tdData, row, col }: IProps) {
-  const { dispatch } = useContext(MineSearchContext);
+  const { dispatch, halted } = useContext(MineSearchContext);
 
   const onClickCell = () => {
+    if (halted) return;
     switch (tdData) {
       case CODE.OPENED:
       case CODE.FLAG:
@@ -72,6 +73,8 @@ function MineTd({ tdData, row, col }: IProps) {
     e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
   ) => {
     e.preventDefault();
+    if (halted) return;
+
     switch (tdData) {
       case CODE.NORMAL:
       case CODE.MINE:
