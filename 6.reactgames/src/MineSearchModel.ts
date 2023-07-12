@@ -3,8 +3,7 @@ export interface MineSearchState {
   timer: number;
   result: string;
   halted: boolean;
-  mines: number;
-  openedCount: number;
+  openCount: number;
 }
 
 export const CODE = {

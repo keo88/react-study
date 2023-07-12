@@ -36,5 +36,6 @@ module.exports = {
       'error',
       { props: true, ignorePropertyModificationsFor: ['draft'] },
     ],
+    'no-continue': 'off',
   },
 };

@@ -11,8 +11,7 @@ const initialState: MineSearchState = {
   timer: 0,
   result: '',
   halted: false,
-  mines: 0,
-  openedCount: 0,
+  openCount: 0,
 };
 
 const plantMine = (row: number, col: number, mine: number): number[][] => {
@@ -95,8 +94,7 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
         ...state,
         tableData: plantMine(action.row, action.col, action.mine),
         halted: false,
-        mines: action.mine,
-        openedCount: 0,
+        openCount: action.row * action.col - action.mine,
       };
     case 'OPEN_CELL':
       sessionOpenedCount = 0;
@@ -106,6 +104,7 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
 
         while (!searchQueue.isEmpty()) {
           const [row, col] = searchQueue.dequeue();
+          if (draft[row][col] !== CODE.NORMAL) continue;
           sessionOpenedCount += 1;
           const { near, len } = countNearMine(row, col, draft);
 
@@ -123,10 +122,19 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
         }
       });
 
+      if (state.openCount - sessionOpenedCount <= 0) {
+        return {
+          ...state,
+          tableData: newTableData,
+          result: `${state.timer}초만에 승리하셨습니다.`,
+          halted: true,
+        };
+      }
+
       return {
         ...state,
         tableData: newTableData,
-        openedCount: state.openedCount + sessionOpenedCount,
+        openCount: state.openCount - sessionOpenedCount,
       };
     case 'CLICK_MINE':
       return {
