@@ -11,6 +11,8 @@ const initialState: MineSearchState = {
   timer: 0,
   result: '',
   halted: false,
+  mines: 0,
+  openedCount: 0,
 };
 
 const plantMine = (row: number, col: number, mine: number): number[][] => {
@@ -84,6 +86,8 @@ const countNearMine = (
 const reducer = (state: MineSearchState, action: MineSearchAction) => {
   let targetCellType: number;
   let searchQueue: Queue<[number, number]>;
+  let newTableData: number[][];
+  let sessionOpenedCount: number;
 
   switch (action.type) {
     case 'START_GAME':
@@ -91,31 +95,38 @@ const reducer = (state: MineSearchState, action: MineSearchAction) => {
         ...state,
         tableData: plantMine(action.row, action.col, action.mine),
         halted: false,
+        mines: action.mine,
+        openedCount: 0,
       };
     case 'OPEN_CELL':
-      return {
-        ...state,
-        tableData: produce(state.tableData, (draft) => {
-          searchQueue = new Queue();
-          searchQueue.enqueue([action.row, action.col]);
+      sessionOpenedCount = 0;
+      newTableData = produce(state.tableData, (draft) => {
+        searchQueue = new Queue();
+        searchQueue.enqueue([action.row, action.col]);
 
-          while (!searchQueue.isEmpty()) {
-            const [row, col] = searchQueue.dequeue();
-            const { near, len } = countNearMine(row, col, draft);
+        while (!searchQueue.isEmpty()) {
+          const [row, col] = searchQueue.dequeue();
+          sessionOpenedCount += 1;
+          const { near, len } = countNearMine(row, col, draft);
 
-            draft[row][col] = len;
+          draft[row][col] = len;
 
-            if (len === 0) {
-              for (let i = 0; i < near.length; i += 1) {
-                const r = near[i].row;
-                const c = near[i].col;
-                if (draft[r][c] < CODE.OPENED) {
-                  searchQueue.enqueue([r, c]);
-                }
+          if (len === 0) {
+            for (let i = 0; i < near.length; i += 1) {
+              const r = near[i].row;
+              const c = near[i].col;
+              if (draft[r][c] === CODE.NORMAL) {
+                searchQueue.enqueue([r, c]);
               }
             }
           }
-        }),
+        }
+      });
+
+      return {
+        ...state,
+        tableData: newTableData,
+        openedCount: state.openedCount + sessionOpenedCount,
       };
     case 'CLICK_MINE':
       return {
